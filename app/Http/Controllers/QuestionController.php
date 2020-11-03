@@ -10,7 +10,7 @@ class QuestionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index','show']]);
+        $this->middleware( 'auth', ['except' => ['index', 'show']] );
     }
     /**
      * Display a listing of the resource.
@@ -20,9 +20,9 @@ class QuestionController extends Controller
     public function index()
     {
         // go to the model and get a group of records
-        $questions = Question::orderBy('id', 'desc')->paginate(3);
+        $questions = Question::orderBy( 'id', 'desc' )->paginate( 3 );
         // return the view, and pass in the group of records to loop through
-        return view('questions.index')->with('questions', $questions);
+        return view( 'questions.index' )->with( 'questions', $questions );
     }
 
     /**
@@ -32,7 +32,7 @@ class QuestionController extends Controller
      */
     public function create()
     {
-        return view('questions.create');
+        return view( 'questions.create' );
     }
 
     /**
@@ -41,23 +41,23 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store( Request $request )
     {
         // validate the form data
-        $this->validate($request, [
-            'title' => 'required|max:255'
-        ]);
+        $this->validate( $request, [
+            'title' => 'required|max:255',
+        ] );
         // process the data and submit it
         $question = new Question();
         $question->title = $request->title;
         $question->description = $request->description;
-        $question->user()->associate(Auth::id());
+        $question->user()->associate( Auth::id() );
 
         // if successful we want to redirect
-        if ($question->save()) {
-            return redirect()->route('questions.show', $question->id);
+        if ( $question->save() ) {
+            return redirect()->route( 'questions.show', $question->id );
         } else {
-            return redirect()->route('questions.create');
+            return redirect()->route( 'questions.create' );
         }
     }
 
@@ -67,12 +67,12 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show( $id )
     {
         // Use the model to get 1 record from the database
-        $question = Question::findOrFail($id);
+        $question = Question::findOrFail( $id );
         // show the view and pass the record to the view
-        return view('questions.show')->with('question', $question);
+        return view( 'questions.show' )->with( 'question', $question );
     }
 
     /**
@@ -81,13 +81,13 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit( $id )
     {
-        $question = Question::findOrFail($id);
-        if ($question->user->id != Auth::id()) {
-            return abort(403);
+        $question = Question::findOrFail( $id );
+        if ( $question->user->id != Auth::id() ) {
+            return abort( 403 );
         }
-        return view('questions.edit', compact('question'));
+        return view( 'questions.edit', compact( 'question' ) );
     }
 
     /**
@@ -97,27 +97,27 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update( Request $request, $id )
     {
         // validate the form data
-        $this->validate($request, [
-            'title' => 'required|max:255'
-        ]);
+        $this->validate( $request, [
+            'title' => 'required|max:255',
+        ] );
 
-        $question = Question::findOrFail($id);
-        if ($question->user->id != Auth::id()) {
-            return abort(403);
+        $question = Question::findOrFail( $id );
+        if ( $question->user->id != Auth::id() ) {
+            return abort( 403 );
         }
 
         $question->title = $request->title;
         $question->description = $request->description;
-        $question->user()->associate(Auth::id());
+        $question->user()->associate( Auth::id() );
 
         // if successful we want to redirect
-        if ($question->save()) {
-            return redirect()->route('questions.show', $question->id);
+        if ( $question->save() ) {
+            return redirect()->route( 'questions.show', $question->id );
         } else {
-            return redirect()->route('questions.update');
+            return redirect()->route( 'questions.update' );
         }
     }
 
@@ -127,10 +127,10 @@ class QuestionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( $id )
     {
-        $question = Question::findOrFail($id);
+        $question = Question::findOrFail( $id );
         $question->delete();
-        return redirect()->route('questions.index');
+        return redirect()->route( 'questions.index' );
     }
 }
